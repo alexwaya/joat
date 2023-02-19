@@ -23,13 +23,26 @@ from django.contrib.auth import views as auth_views
 from accounts.views import CustomLoginView  
 from accounts.forms import LoginForm
 
+from accounts.views import ChangePasswordView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('pages.urls')),
     path('accounts/', include('accounts.urls')),
+
+    path('password-change/', ChangePasswordView.as_view(), name='password_change'),
 
     path('login/', CustomLoginView.as_view(redirect_authenticated_user=True, template_name='accounts/registration/login.html',
                                            authentication_form=LoginForm), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='accounts/registration/logout.html'), name='logout'),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + \
+              static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+admin.site.site_header = "Joat Links"
+admin.site.site_title = "Admin"
+admin.site.index_title = "Joat Links"
